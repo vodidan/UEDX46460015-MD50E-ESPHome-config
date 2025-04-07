@@ -78,6 +78,7 @@ display:
       offset_height: 0
     cs_pin: 12
     reset_pin: 8
+    enable_pin: 17
     auto_clear_enabled: false
     init_sequence:
       - [ 0xFE, 0x00 ]
@@ -128,10 +129,3 @@ lvgl:
             indicator:
               arc_color: 0xff0000
 
-switch:
-  - platform: gpio
-    pin: 
-      number: 17
-      mode: OUTPUT
-    id: backlight_pin
-    restore_mode: ALWAYS_ON
