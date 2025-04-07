@@ -1,8 +1,8 @@
 # ESPHome Config for UEDX46460015-MD50ESP32 1.5" SH8601 Display
 
 This repository contains a working ESPHome configuration for the **UEDX46460015-MD50ESP32** round touch knob display, which features:
-
-- 1.5" 466x472 round AMOLED panel  
+https://www.aliexpress.com/item/1005008352920046.html
+- 1.5" 466x466 round AMOLED panel  
 - SH8601 display driver over QSPI  
 - CST816 touch controller over I²C  
 - Rotary encoder + button  
@@ -10,7 +10,7 @@ This repository contains a working ESPHome configuration for the **UEDX46460015-
 The config uses:
 - `qspi_dbi` custom display driver from ESPHome
 - LVGL for rendering UI
-- Iinit sequence for SH8601
+- Init sequence for SH8601
 
 
 ## 🛠️ Hardware Pins
