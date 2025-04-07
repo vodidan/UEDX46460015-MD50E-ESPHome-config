@@ -79,6 +79,7 @@ display:
     cs_pin: 12
     reset_pin: 8
     enable_pin: 17
+    brightness: 200
     auto_clear_enabled: false
     init_sequence:
       - [ 0xFE, 0x00 ]
@@ -104,13 +105,32 @@ touchscreen:
   reset_pin: 2
   on_release:
     then:
-          - logger.log: "touchscreen preseed"
+      - logger.log: "touchscreen preseed"
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - logger.log: "LVGL resuming"
+            - lvgl.resume:
+            - lvgl.widget.redraw:
+            - delay: 100ms
+            - number.set:
+                id: display_brightness
+                value: 80
 
 lvgl:
   displays:
     - main_display
   touchscreens:
     - my_touchscreen
+  on_idle:
+    timeout: !lambda "return (id(display_timeout).state * 1000);"
+    then:
+      - logger.log: "LVGL is idle"
+      - number.set:
+          id: display_brightness
+          value: 0
+      - lvgl.pause:
+          show_snow: true
   pages:
     - id: demo_page
       widgets:
@@ -129,3 +149,28 @@ lvgl:
             indicator:
               arc_color: 0xff0000
 
+number:
+  - platform: template
+    name: LVGL Screen timeout(knob)
+    optimistic: true
+    id: display_timeout
+    unit_of_measurement: "s"
+    initial_value: 30
+    restore_value: true
+    min_value: 10
+    max_value: 180
+    step: 5
+    mode: box
+  - platform: template
+    name: "Display Brightness"
+    id: display_brightness
+    optimistic: true
+    min_value: 0
+    max_value: 100
+    step: 1
+    restore_value: true
+    on_value:
+      then:
+        - lambda: |-
+            uint8_t brightness = static_cast<uint8_t>((x / 100.0f) * 255.0f);
+            id(main_display).set_brightness(brightness);
